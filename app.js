@@ -1,13 +1,15 @@
 const express = require("express")
+const cors = require("cors")
+const cookieParser = require("cookie-parser")
+const routes = require("./routes")
+const connect = require("./models")
+const app = express()
 
 
 
 
 
-
-
-
-
+app.use(cors())
 
 
 
