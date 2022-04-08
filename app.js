@@ -1,19 +1,25 @@
-const express = require("express")
+const express = require('express')
+const routes = require('./routes')
+const connect = require('./models')
+const cors = require('cors')
+const app = express()
 
+// env 불러오기
+require('dotenv').config()
 
+//MongoDB Connection
+connect()
 
-
-
-
-
-
-
-
-
-
-
-app.get("/", (req, res) => {
-    res.redirect('/post')
+//MiddleWare
+app.use(express.static('views'))
+app.use(express.json())
+app.use(express.urlencoded())
+app.use((req, res, next) => {
+	//x-Powerd-By 제거
+	res.removeHeader('X-Powered-By')
+	next()
 })
+app.use(cors())
+app.use('/', routes)
 
-module.exports = app;
+module.exports = app
