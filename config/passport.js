@@ -5,11 +5,16 @@ const ExtractJWT = passportJWT.ExtractJwt;
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user')
 
+
 //Strategy 정의 
+//LocalStrategy의 역할은 request에 넘겨져오는 form-data와 localDB에 저장되어 있는 
+//user와 비교하는 것이다. 
+//JWTStrategy는 jwt토큰을 읽어서 해당 사용자를 인증한다. 
+// Locarlstrategy는 로그인, JWT Strategy는 API 접근 인증이다
 
 module.exports = () => {
     // Local Strategy
-    passport.use(new LocalStrategy({
+    passport.use("local", new LocalStrategy({
         usernameField: 'userId',
         passwordField: 'password'
     },
@@ -25,9 +30,11 @@ module.exports = () => {
                 .catch(err => done(err));
         }
     ));
+    //local 인증을 통해 JWT TOKEN 발급해주는 API작성 필요!
 
     //JWT Strategy
-    passport.use(new JWTStrategy({
+    //JWT 토큰이 있는지, 유효한 토큰인지 확인 
+    passport.use("JWT", new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
         secretOrKey: "my-secret-key"
     },

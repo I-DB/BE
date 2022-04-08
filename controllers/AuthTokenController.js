@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 require('dotenv').config();
 
+//토큰 발급 
 exports.create = function (req, res) {
     passport.authenticate('local', { session: false }, (err, user) => {
         if (err || !user) {

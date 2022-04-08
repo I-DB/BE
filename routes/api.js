@@ -1,4 +1,4 @@
-const AuthTokenController = require('../controllers/AuthTokenController');
+// const AuthTokenController = require('../controllers/AuthTokenController');
 
 
-route.post('/api/login', AuthTokenController.create);
+// route.post('/api/auth', AuthTokenController.create);
