@@ -8,11 +8,12 @@ const postSchema = new mongoose.Schema({
     userId: { type: String, required: true },
     comment: [
 		{
-			nickName: { type: String, required: true },
-			userId: { type: String,	required: true },
-			content: { type: String, required: true },
+			nickName: { type: String },
+			userId: { type: String },
+			content: { type: String },
 		},
 	],
+    liked: [String],
 
 }, {timestamps: true})
 

@@ -24,13 +24,13 @@ router.patch("/like", authMiddleware, postCtrl.likePost);
 // 좋아요 취소
 router.patch("/unlike", authMiddleware, postCtrl.unlikePost);
 
-// // 댓글 작성
-// router.post("/comment/:postId", authMiddleware, controller.applyComment);
+// 댓글 작성
+router.post("/comment/:postId", authMiddleware, postCtrl.applyComment);
 
-// // 댓글 수정
-// router.patch("/comment/:postId", authMiddleware, controller.updateComment);
+// 댓글 수정
+router.patch("/comment/:postId", authMiddleware, postCtrl.updateComment);
 
-// // 댓글 삭제
-// router.delete("/comment/:postId", authMiddleware, controller.deleteComment);
+// 댓글 삭제
+router.delete("/comment/:postId", authMiddleware, postCtrl.deleteComment);
 
 module.exports = router;

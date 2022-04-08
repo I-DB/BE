@@ -1,10 +1,9 @@
 const Post = require("../models/post");
-// const Comment = require("../models/comment");
 
 async function showPost(req, res, next) {
 	const postArr = await Post.find();
-    let post = postArr.sort((a,b) => b.updatedAt - a.updatedAt)
-    res.send({ post });
+    let result = postArr.sort((a,b) => b.createdAt - a.createdAt)
+    res.send({ "success" : true, result });
 }
 
 async function applyPost(req, res) {
@@ -18,47 +17,44 @@ async function applyPost(req, res) {
 
 async function updatePost (req, res) {
     const { postId } = req.params;  
-    const { title, contents, date, time } = req.body;
+    const { title, content } = req.body;
+    console.log(postId, title, content)
 
-    await Post.updateOne({ postId: Number(postId) }, { $set: { title, contents, date, time } });
-    res.json({ result: "success" })
+    await Post.updateOne({ _id : postId }, { $set: { title, content } });
+    res.json({ "success" : true })
 
 }
 
 async function deletePost (req, res) {
     const { postId } = req.params
 
-    await Post.deleteOne({ postId: postId })
-    res.json({ result: "success" })
+    await Post.deleteOne({ _id : postId })
+    res.json({ "success" : true })
 }
 
 async function detailPost (req, res) {
     const { postId } = req.params;
-    const post = await Post.findOne({ postId });
-    res.send({ post });
+    const result = await Post.findOne({ _id : postId });
+    res.send({ "success" : true, result });
 }
 
 async function likePost (req, res) {
+    const { postId } = req.body;
+    const { userId } = res.local.user;
 
+    await Post.updateOne({ _id : postId }, { $push: { liked : userId } } )
+
+    res.json({ "success" : true })
 }
 
 async function unlikePost (req, res) {
+    const { postId } = req.body;
+    const { userId } = res.local.user;
 
+    await Post.updateOne({ _id : postId }, { $pull: { liked : userId } } )
+
+    res.json({ "success" : true })
 }
-
-module.exports = { applyPost, showPost, detailPost, updatePost, deletePost, likePost, unlikePost };
-
-
-
-
-// async function showComment(req, res) {
-//     const { postId } = req.params;
-
-//     const comment = await Comment.find({ postId });
-//     res.send({
-//         comment
-//     });
-// }
 
 // async function applyComment(req, res) {
 //     try {
@@ -113,4 +109,4 @@ module.exports = { applyPost, showPost, detailPost, updatePost, deletePost, like
 //     }
 // }
 
-// module.exports = { showComment, applyComment, updateComment, deleteComment };
+module.exports = { applyPost, showPost, detailPost, updatePost, deletePost, likePost, unlikePost, applyComment, updateComment, deleteComment };
