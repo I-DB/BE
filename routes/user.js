@@ -8,12 +8,11 @@ const router = express.Router()
 
 router.post("/join", userController.postJoin)
 
-
 router.get("/auth", passport.authenticate('jwt', { session: false }), userController.sendAuth);
 
 router.post("/login", passport.authenticate("local", { session: false }), AuthTokenController.create)
 
-
+router.post("/token", AuthTokenController.makeToken)
 
 
 

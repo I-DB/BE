@@ -20,8 +20,8 @@ exports.create = function (req, res) {
                 res.send(err);
             }
             // jwt.sign('token내용', 'JWT secretkey')
-            const token = jwt.sign(user.toJSON(), accessTokenSecret, { expiresIn: "10m" });
-            const refreshToken = jwt.sign(user.toJSON(), refreshTokenSecret, { expiresIn: "30m" })
+            const token = jwt.sign(user.toJSON(), accessTokenSecret, { expiresIn: "30s" });
+            const refreshToken = jwt.sign(user.toJSON(), refreshTokenSecret, { expiresIn: "1m" })
             refreshTokens.push(refreshToken)
             console.log("@@@@", refreshTokens)
             res.cookie("token", token);
@@ -29,3 +29,42 @@ exports.create = function (req, res) {
         });
     })(req, res);
 };
+
+
+
+exports.makeToken = async function (req, res) {
+    const refreshToken = req.header("x-auth-token");
+    console.log("resfreshToken!!!!", refreshToken)
+
+    if (!refreshToken) {
+        res.status(401).json({
+            errors: [{
+                msg: "토큰을 찾을 수 없습니다."
+            }]
+        })
+    }
+    if (!refreshTokens.includes(refreshToken)) {
+        res.status(403).json({
+            errors: [{
+                msg: "refreshToken이 유효하지 않습니다."
+            }]
+        })
+    }
+
+    try {
+        const user = await jwt.verify(refreshToken, refreshTokenSecret);
+
+        const { userId } = user
+        const accessToken = await jwt.sign(
+            { userId }, accessTokenSecret, { expiresIn: "30s" }
+        )
+        res.json({ accessToken })
+    } catch (error) {
+        res.status(403).json({
+            errors: [
+                { msg: "유효하지 않은 토큰" }
+            ]
+        })
+    }
+}
+

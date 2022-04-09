@@ -2,7 +2,7 @@ const app = require('./app')
 const fs = require('fs')
 const https = require('https')
 const domain = process.env.DOMAIN
-const dev = false
+const dev = true
 
 if (dev === true) {
 	const port = 3000
