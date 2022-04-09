@@ -58,7 +58,7 @@ const UserSchema = Joi.object().keys({
     confirmPassword: Joi.string().required().valid(Joi.ref('password')).error(errors => {
         errors.forEach(err => {
             switch (err.code) {
-                case "any.ref":
+                case "any.only":
                     return err.message = "비밀번호가 일치하지 않습니다."
                 case "any.required":
                     err.message = "비밀번호 확인란을 입력해주세요!"
