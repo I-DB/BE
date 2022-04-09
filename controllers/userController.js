@@ -34,8 +34,14 @@ async function postJoin(req, res) {
 
 }
 
+function sendAuth(req, res) {
+    // console.log("response####", res)
+    console.log("*********", req.user)
+    res.send({ user: req.user, success: true, });
+}
 
-module.exports = { postJoin }
+
+module.exports = { postJoin, sendAuth }
 
 // function postLogin() {
 

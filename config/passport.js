@@ -2,6 +2,7 @@ const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
+const bcrypt = require("bcrypt")
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user')
 
@@ -23,9 +24,11 @@ module.exports = () => {
     },
         function (userId, password, done) {
             // 이 부분에선 저장되어 있는 User를 비교하면 된다. 
-            return User.findOne({ $or: [{ userId }, { password }] })
+            console.log("Login", userId, password)
+            return User.findOne({ userId })
                 .then(user => {
-                    if (!user) {
+                    const decodedPassword = user.password
+                    if (!bcrypt.compareSync(password, decodedPassword)) {
                         return done(null, false, { message: '아이디나 비밀번호가 잘못됐습니다.' });
                     }
                     return done(null, user, { message: '로그인 성공!' });
@@ -43,8 +46,11 @@ module.exports = () => {
         secretOrKey: "my-secret-key"
     },
         function (jwtPayload, done) {
-            return User.findOneById(jwtPayload.id)
+            const { userId } = jwtPayload
+
+            return User.findOne({ userId }).select('-password')//password 빼주기
                 .then(user => {
+                    console.log("%%%", user)
                     return done(null, user);
                 })
                 .catch(err => {
