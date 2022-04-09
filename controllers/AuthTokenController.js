@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
+const jwt = require('jsonwebtoken')
+const passport = require('passport')
+require('dotenv').config()
+const accessToken = process.env.ACCESS_TOKEN
 
-require('dotenv').config();
-
-//토큰 발급 
+//토큰 발급
 exports.create = function (req, res) {
     passport.authenticate('local', { session: false }, (err, user) => {
         if (err || !user) {
@@ -17,7 +17,7 @@ exports.create = function (req, res) {
                 res.send(err);
             }
             // jwt.sign('token내용', 'JWT secretkey')
-            const token = jwt.sign(user.toJSON(), "my-secret-key");
+            const token = jwt.sign(user.toJSON(), accessToken, { expiresIn: "30m" });
             res.cookie("token", token);
             return res.json({ user, token });
         });

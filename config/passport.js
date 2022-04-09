@@ -4,6 +4,8 @@ const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 const bcrypt = require("bcrypt")
 const LocalStrategy = require('passport-local').Strategy;
+require('dotenv').config()
+const accessToken = process.env.ACCESS_TOKEN
 const User = require('../models/user')
 
 
@@ -41,7 +43,7 @@ module.exports = () => {
     //JWT 토큰이 있는지, 유효한 토큰인지 확인 
     passport.use(new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-        secretOrKey: "my-secret-key"
+        secretOrKey: accessToken
     },
         function (jwtPayload, done) {
             const { userId } = jwtPayload
