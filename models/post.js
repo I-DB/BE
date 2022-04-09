@@ -11,6 +11,7 @@ const postSchema = new mongoose.Schema({
 			nickName: { type: String },
 			userId: { type: String },
 			content: { type: String },
+            commentId: { type: Number }
 		},
 	],
     liked: [String],

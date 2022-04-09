@@ -8,8 +8,8 @@ async function showPost(req, res, next) {
 
 async function applyPost(req, res) {
     const { title, content } = req.body;
-    const { userId, nickName } = res.local.user;
-    
+    const { userId, nickName } = res.locals.user;
+        
     await Post.create({ title, content, userId, nickName });
     
     res.json({ "success" : true });
@@ -18,7 +18,6 @@ async function applyPost(req, res) {
 async function updatePost (req, res) {
     const { postId } = req.params;  
     const { title, content } = req.body;
-    console.log(postId, title, content)
 
     await Post.updateOne({ _id : postId }, { $set: { title, content } });
     res.json({ "success" : true })
@@ -39,8 +38,8 @@ async function detailPost (req, res) {
 }
 
 async function likePost (req, res) {
-    const { postId } = req.body;
-    const { userId } = res.local.user;
+    const { postId } = req.params;
+    const { userId } = res.locals.user;
 
     await Post.updateOne({ _id : postId }, { $push: { liked : userId } } )
 
@@ -48,65 +47,38 @@ async function likePost (req, res) {
 }
 
 async function unlikePost (req, res) {
-    const { postId } = req.body;
-    const { userId } = res.local.user;
+    const { postId } = req.params;
+    const { userId } = res.locals.user;
 
     await Post.updateOne({ _id : postId }, { $pull: { liked : userId } } )
 
-    res.json({ "success" : true })
+    res.json({ "success": true })
 }
 
-// async function applyComment(req, res) {
-//     try {
-//         console.log(res.locals)
-//         const { user } = res.locals;
-//         const { comment } = req.body;
-//         const { postId } = req.params;
+async function applyComment(req, res) {
+    const { user } = res.locals;
+    const { content } = req.body;
+    const { postId } = req.params;
 
-//         const commentAmount = await Comment.find();
+    await Post.updateOne({ _id : postId }, { $push: { comment: { nickName: user.nickName, userId: user.userId, content } } })
 
-//         if (commentAmount.length) {
-//             const commentSorted = commentAmount.sort((a,b) => b.commentId - a.commentId)
-//             const MaxCommentNum = commentSorted[0]['commentId']
-//             const commentId = MaxCommentNum + 1
-//             await Comment.create({ postId, comment, nickname : user.nickname, commentId });
-//         } else {
-//             const commentId = 1
-//             await Comment.create({ postId, comment, nickname : user.nickname, commentId });
-//         }
+    res.json({ "success": true })
+}
 
-//         res.send({
-//             message: "댓글 등록 완료!",
-//         });
-//     } catch (err) {
-//         res.status(401).send({
-//             message: "댓글을 입력해주세요.",
-//         });
-//     }
-// }
+async function updateComment(req, res) {
+    const { postId } = req.params;
+    const { commentId, content } = req.body;
+    
+    // await Post.updateOne({ _id : postId, comment: { _id: commentId} }, { $set: { comment: { content } } });
+    res.json({ "success": true }) ////미구현
+}
 
-// async function updateComment(req, res) {
-//     const { comment, commentId } = req.body;
+async function deleteComment(req, res) {
+    const { postId } = req.params;
+    const { commentId } = req.body;
 
-//     await Comment.updateOne({ commentId }, { $set: { comment } })
-//     res.send({
-//         message: "댓글 수정 완료!",
-//     });
-// }
-
-// async function deleteComment(req, res) {
-//     console.log(req.body)
-//     try {
-//         const { commentId } = req.body;
-//         await Comment.deleteOne({ commentId });
-//         res.send({
-//             Message: "댓글 삭제 완료!",
-//         });
-//     } catch (err) {
-//         res.send({
-//             message: "자신이 작성한 댓글만 삭제할 수 있습니다.",
-//         });
-//     }
-// }
+    await Post.updateOne({ _id: postId }, { $pull: { comment: { _id: commentId } } });
+    res.json({ "success": true })
+}
 
 module.exports = { applyPost, showPost, detailPost, updatePost, deletePost, likePost, unlikePost, applyComment, updateComment, deleteComment };

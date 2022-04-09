@@ -19,10 +19,10 @@ router.delete("/:postId", authMiddleware, postCtrl.deletePost);
 router.get("/:postId", postCtrl.detailPost);
 
 // 좋아요
-router.patch("/like", authMiddleware, postCtrl.likePost);
+router.patch("/like/:postId", authMiddleware, postCtrl.likePost);
 
 // 좋아요 취소
-router.patch("/unlike", authMiddleware, postCtrl.unlikePost);
+router.patch("/unlike/:postId", authMiddleware, postCtrl.unlikePost);
 
 // 댓글 작성
 router.post("/comment/:postId", authMiddleware, postCtrl.applyComment);
