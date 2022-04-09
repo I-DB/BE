@@ -1,7 +1,10 @@
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 require('dotenv').config()
-const accessToken = process.env.ACCESS_TOKEN
+const accessTokenSecret = process.env.ACCESS_TOKEN
+const refreshTokenSecret = process.env.REFRESH_TOKEN
+
+let refreshTokens = [];
 
 //토큰 발급
 exports.create = function (req, res) {
@@ -17,9 +20,12 @@ exports.create = function (req, res) {
                 res.send(err);
             }
             // jwt.sign('token내용', 'JWT secretkey')
-            const token = jwt.sign(user.toJSON(), accessToken, { expiresIn: "30m" });
+            const token = jwt.sign(user.toJSON(), accessTokenSecret, { expiresIn: "10m" });
+            const refreshToken = jwt.sign(user.toJSON(), refreshTokenSecret, { expiresIn: "30m" })
+            refreshTokens.push(refreshToken)
+            console.log("@@@@", refreshTokens)
             res.cookie("token", token);
-            return res.json({ user, token });
+            return res.json({ user, token, refreshToken });
         });
     })(req, res);
 };
