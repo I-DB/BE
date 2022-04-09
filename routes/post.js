@@ -1,36 +1,36 @@
 const express = require("express");
 const router = express.Router();
-const authMiddleware = require("../middlewares/authMiddleware");
+const passport = require('passport')
 const postCtrl = require("../controllers/postController");
 
 // 메인페이지 불러오기
 router.get("/", postCtrl.showPost);
 
 // 게시글 작성
-router.post("/", authMiddleware, postCtrl.applyPost);
+router.post("/", passport.authenticate('jwt', { session: false }), postCtrl.applyPost);
 
 // 게시글 수정
-router.patch("/:postId", authMiddleware, postCtrl.updatePost);
+router.patch("/:postId", passport.authenticate('jwt', { session: false }), postCtrl.updatePost);
 
 // 게시글 삭제
-router.delete("/:postId", authMiddleware, postCtrl.deletePost);
+router.delete("/:postId", passport.authenticate('jwt', { session: false }), postCtrl.deletePost);
 
 // 상세게시글 불러오기
 router.get("/:postId", postCtrl.detailPost);
 
 // 좋아요
-router.patch("/like/:postId", authMiddleware, postCtrl.likePost);
+router.patch("/like/:postId", passport.authenticate('jwt', { session: false }), postCtrl.likePost);
 
 // 좋아요 취소
-router.patch("/unlike/:postId", authMiddleware, postCtrl.unlikePost);
+router.patch("/unlike/:postId", passport.authenticate('jwt', { session: false }), postCtrl.unlikePost);
 
 // 댓글 작성
-router.post("/comment/:postId", authMiddleware, postCtrl.applyComment);
+router.post("/comment/:postId", passport.authenticate('jwt', { session: false }), postCtrl.applyComment);
 
 // 댓글 수정
-router.patch("/comment/:postId", authMiddleware, postCtrl.updateComment);
+router.patch("/comment/:postId", passport.authenticate('jwt', { session: false }), postCtrl.updateComment);
 
 // 댓글 삭제
-router.delete("/comment/:postId", authMiddleware, postCtrl.deleteComment);
+router.delete("/comment/:postId", passport.authenticate('jwt', { session: false }), postCtrl.deleteComment);
 
 module.exports = router;

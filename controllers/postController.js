@@ -8,7 +8,7 @@ async function showPost(req, res, next) {
 
 async function applyPost(req, res) {
     const { title, content } = req.body;
-    const { userId, nickName } = res.locals.user;
+    const { userId, nickName } = req.user;
         
     await Post.create({ title, content, userId, nickName });
     
@@ -39,7 +39,7 @@ async function detailPost (req, res) {
 
 async function likePost (req, res) {
     const { postId } = req.params;
-    const { userId } = res.locals.user;
+    const { userId } = req.user;
 
     await Post.updateOne({ _id : postId }, { $push: { liked : userId } } )
 
@@ -48,7 +48,7 @@ async function likePost (req, res) {
 
 async function unlikePost (req, res) {
     const { postId } = req.params;
-    const { userId } = res.locals.user;
+    const { userId } = req.user;
 
     await Post.updateOne({ _id : postId }, { $pull: { liked : userId } } )
 
@@ -56,7 +56,7 @@ async function unlikePost (req, res) {
 }
 
 async function applyComment(req, res) {
-    const { user } = res.locals;
+    const { user } = req;
     const { content } = req.body;
     const { postId } = req.params;
 

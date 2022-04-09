@@ -24,7 +24,6 @@ module.exports = () => {
     },
         function (userId, password, done) {
             // 이 부분에선 저장되어 있는 User를 비교하면 된다. 
-            console.log("Login", userId, password)
             return User.findOne({ userId })
                 .then(user => {
                     const decodedPassword = user.password
@@ -49,7 +48,6 @@ module.exports = () => {
 
             return User.findOne({ userId }).select('-password')//password 빼주기
                 .then(user => {
-                    console.log("%%%", user)
                     return done(null, user);
                 })
                 .catch(err => {
