@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+require('dotenv').config()
 const connect = () => {
 	const mongooseId = process.env.MONGO_ID
 	const mongoosePw = process.env.MONGO_PWD
@@ -9,8 +10,9 @@ const connect = () => {
 		)
 		.catch((err) => {
 			if (err) throw err
-			console.log('데이터베이스에 연결되었습니다. : ' + databaseUrl)
 		})
 }
+console.log('데이터베이스에 연결되었습니다. : ')
 
 module.exports = connect
+
