@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+
 require('dotenv').config();
 
 //토큰 발급 
@@ -17,6 +18,7 @@ exports.create = function (req, res) {
             }
             // jwt.sign('token내용', 'JWT secretkey')
             const token = jwt.sign(user.toJSON(), "my-secret-key");
+            res.cookie("token", token);
             return res.json({ user, token });
         });
     })(req, res);

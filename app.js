@@ -2,6 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const routes = require("./routes")
 const connect = require("./models")
+const cookieParser = require('cookie-parser');
 require('dotenv').config()
 
 //1. passport 등록 => 전략 정의
@@ -15,19 +16,17 @@ connect()
 
 //미들웨어
 app.use(cors())
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 //passport 사용한다고 express에게 말함
 app.use(passport.initialize())
-//session을 사용하여 passport 동작시킨다고 express에게 알림
-// app.use(passport.session())
 passportConfig();
-
-app.use(cors())
+app.use(cookieParser());
 app.use('/', routes)
-app.get("/", (req, res) => {
-    res.redirect('/post')
-})
+// app.get("/", (req, res) => {
+//     res.redirect('/post')
+// })
 
 
 module.exports = app

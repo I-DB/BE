@@ -3,9 +3,7 @@ const bcrypt = require("bcrypt");
 
 async function postJoin(req, res) {
     const { userId, nickName, password, confirmPassword } = req.body;
-    console.log("@@@@@@@@@@@@@", req.body)
     //비번 확인
-    console.log("@@@", password, confirmPassword)
     if (password !== confirmPassword) {
         res.status(400).json({
             success: false, msg: "비밀번호가 일치하지 않습니다",
@@ -15,7 +13,7 @@ async function postJoin(req, res) {
     console.log("ddd")
 
     //email, nickname 중복검사
-    const existUser = await User.findOne({ $or: [{ userId }, { nickName }] })
+    const existUser = await User.exists({ $or: [{ userId }, { nickName }] })
     if (existUser) {
         res.status(400).json({
             success: false, msg: "이메일 또는 닉네임이 이미 존재합니다",

@@ -12,15 +12,18 @@ const User = require('../models/user')
 //JWTStrategy는 jwt토큰을 읽어서 해당 사용자를 인증한다. 
 // Locarlstrategy는 로그인, JWT Strategy는 API 접근 인증이다
 
+
+
+
 module.exports = () => {
     // Local Strategy
-    passport.use("local", new LocalStrategy({
+    passport.use(new LocalStrategy({
         usernameField: 'userId',
         passwordField: 'password'
     },
         function (userId, password, done) {
             // 이 부분에선 저장되어 있는 User를 비교하면 된다. 
-            return User.findOne({ userId, password })
+            return User.findOne({ $or: [{ userId }, { password }] })
                 .then(user => {
                     if (!user) {
                         return done(null, false, { message: '아이디나 비밀번호가 잘못됐습니다.' });
@@ -30,11 +33,12 @@ module.exports = () => {
                 .catch(err => done(err));
         }
     ));
+
     //local 인증을 통해 JWT TOKEN 발급해주는 API작성 필요!
 
     //JWT Strategy
     //JWT 토큰이 있는지, 유효한 토큰인지 확인 
-    passport.use("JWT", new JWTStrategy({
+    passport.use(new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
         secretOrKey: "my-secret-key"
     },
