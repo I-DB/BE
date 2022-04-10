@@ -5,17 +5,8 @@ const userValidation = require('../helpers/userValidations')
 async function postJoin(req, res) {
     // #swagger.tags = ['user']
     try {
-        const { userId, nickName, password, confirmPassword } =
-            await userValidation.validateAsync(req.body)
+        const { userId, nickName, password, confirmPassword } = await userValidation.validateAsync(req.body)
         //비번 확인
-
-        if (password !== confirmPassword) {
-            res.status(400).json({
-                success: false,
-                msg: '비밀번호가 일치하지 않습니다',
-            })
-            return
-        }
 
         //email, nickname 중복검사
         const existUser = await User.exists({ $or: [{ userId }, { nickName }] })

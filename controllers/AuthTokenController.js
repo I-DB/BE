@@ -4,6 +4,7 @@ require('dotenv').config()
 const accessTokenSecret = process.env.ACCESS_TOKEN
 const refreshTokenSecret = process.env.REFRESH_TOKEN
 
+//refreshTokens가 생성되면 이 배열에 넣어준다.
 let refreshTokens = [];
 
 //토큰 발급
@@ -21,9 +22,9 @@ exports.create = function (req, res) {
             }
             // jwt.sign('token내용', 'JWT secretkey')
             const token = jwt.sign(user.toJSON(), accessTokenSecret, { expiresIn: "30s" });
-            const refreshToken = jwt.sign(user.toJSON(), refreshTokenSecret, { expiresIn: "1m" })
+            const refreshToken = jwt.sign(user.toJSON(), refreshTokenSecret, { expiresIn: "3m" })
+            // cookie.set('jwt', refreshToken)
             refreshTokens.push(refreshToken)
-            console.log("@@@@", refreshTokens)
             res.cookie("token", token);
             return res.json({ user, token, refreshToken });
         });
