@@ -18,9 +18,9 @@ exports.create = function (req, res) {
 				res.send(err)
 			}
 			// jwt.sign('token내용', 'JWT secretkey')
-			const token = jwt.sign(user.toJSON(), 'my-secret-key')
+			const token = jwt.sign(user.toJSON(), process.env.SECRETKEY)
 			// res.cookie("token", token);
-			return res.json({ user, token })
+			return res.json({ token })
 		})
 	})(req, res)
 }
