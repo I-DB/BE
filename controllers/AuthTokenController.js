@@ -22,7 +22,7 @@ exports.create = function (req, res) {
                 res.send(err);
             }
             // jwt.sign('token내용', 'JWT secretkey')
-            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: "30s" });
+            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: "20m" });
             const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, { expiresIn: "30m" })
             refreshTokens.push(refreshToken)
             res.cookie("token", token);
@@ -56,7 +56,7 @@ exports.makeToken = async function (req, res) {
 
         const { userId } = user
         const accessToken = await jwt.sign(
-            { userId }, process.env.ACCESS_TOKEN, { expiresIn: "30s" }
+            { userId }, process.env.ACCESS_TOKEN, { expiresIn: "20m" }
         )
         res.json({ accessToken })
     } catch (error) {
