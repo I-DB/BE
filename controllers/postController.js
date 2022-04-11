@@ -98,7 +98,7 @@ async function updateComment(req, res) {
 		}
 	)
 
-	res.json({ success: true }) ////미구현
+	res.json({ success: true })
 }
 
 async function deleteComment(req, res) {

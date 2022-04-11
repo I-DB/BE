@@ -25,12 +25,12 @@ router.patch("/like/:postId", passport.authenticate('jwt', { session: false }), 
 router.patch("/unlike/:postId", passport.authenticate('jwt', { session: false }), postCtrl.unlikePost);
 
 // 댓글 작성
-router.post("/comment/:postId", passport.authenticate('jwt', { session: false }), postCtrl.applyComment);
+router.post("/:postId/comment", passport.authenticate('jwt', { session: false }), postCtrl.applyComment);
 
 // 댓글 수정
-router.patch("/comment/:postId", passport.authenticate('jwt', { session: false }), postCtrl.updateComment);
+router.patch("/:postId/comment", passport.authenticate('jwt', { session: false }), postCtrl.updateComment);
 
 // 댓글 삭제
-router.delete("/comment/:postId", passport.authenticate('jwt', { session: false }), postCtrl.deleteComment);
+router.delete("/:postId/comment", passport.authenticate('jwt', { session: false }), postCtrl.deleteComment);
 
 module.exports = router;
