@@ -43,7 +43,7 @@ exports.create = function (req, res) {
                     { token: refreshToken },
                     { new: true })
             }
-            // refreshTokens.push(refreshToken)
+
             res.cookie("token", token, {
                 httpOnly: true,
                 sameSite: 'none',

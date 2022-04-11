@@ -12,7 +12,7 @@ require('dotenv').config()
 
 //1. passport 등록 => 전략 정의
 const passport = require('passport')
-const passportConfig = require('./config/passport')
+const passportConfig = require('./passport/BearerStrategy')
 const app = express()
 
 connect()
