@@ -8,9 +8,10 @@ router.post("/join", userController.postJoin)
 
 router.get(
     '/auth',
-    passport.authenticate('jwt', { session: false }),
+    passport.authenticate("jwt", { session: false }),
     userController.sendAuth
 )
+// AuthTokenController.checkAuthenticated,
 
 router.post(
     '/login',
