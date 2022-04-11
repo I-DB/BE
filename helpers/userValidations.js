@@ -23,7 +23,7 @@ const UserSchema = Joi.object().keys({
         })
         return errors
     }),
-    nickName: Joi.string().required().min(3).max(20).alphanum().error(errors => {
+    nickName: Joi.string().required().min(3).max(20).error(errors => {
         errors.forEach(err => {
             switch (err.code) {
                 case "any.required":
@@ -33,9 +33,6 @@ const UserSchema = Joi.object().keys({
                     break;
                 case "string.max":
                     err.message = "닉네임은 최대 20글자까지 가능합니다!"
-                    break;
-                case "string.alphanum":
-                    err.message = "닉네임은 영어로 작성해주세요"
                     break;
                 default:
                     break;

@@ -1,11 +1,10 @@
-const passport = require('passport');
-const passportJWT = require('passport-jwt');
-const JWTStrategy = passportJWT.Strategy;
-const ExtractJWT = passportJWT.ExtractJwt;
-const bcrypt = require("bcrypt")
-const LocalStrategy = require('passport-local').Strategy;
 require('dotenv').config()
-const accessToken = process.env.ACCESS_TOKEN
+const passport = require('passport')
+const passportJWT = require('passport-jwt')
+const JWTStrategy = passportJWT.Strategy
+const ExtractJWT = passportJWT.ExtractJwt
+const bcrypt = require('bcrypt')
+const LocalStrategy = require('passport-local').Strategy
 const User = require('../models/user')
 
 //Strategy 정의
@@ -42,14 +41,13 @@ module.exports = () => {
 
 	//local 인증을 통해 JWT TOKEN 발급해주는 API작성 필요!
 	//JWT Strategy
-	//JWT 토큰이 있는지, 유효한 토큰인지 확인 
+	//JWT 토큰이 있는지, 유효한 토큰인지 확인
 	passport.use(new JWTStrategy({
 		jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-		secretOrKey: accessToken
+		secretOrKey: process.env.ACCESS_TOKEN
 	},
 		function (jwtPayload, done) {
 			const { userId } = jwtPayload
-
 			return User.findOne({ userId })
 				.select('-password') //password 빼주기
 				.then((user) => {
@@ -61,4 +59,5 @@ module.exports = () => {
 		}
 	)
 	)
+
 }

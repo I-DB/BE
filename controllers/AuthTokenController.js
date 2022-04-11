@@ -1,15 +1,16 @@
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 require('dotenv').config()
-const accessTokenSecret = process.env.ACCESS_TOKEN
-const refreshTokenSecret = process.env.REFRESH_TOKEN
+
 
 //refreshTokens가 생성되면 이 배열에 넣어준다.
 let refreshTokens = [];
 
 //토큰 발급
 exports.create = function (req, res) {
+    // #swagger.tags = ['user']
     passport.authenticate('local', { session: false }, (err, user) => {
+
         if (err || !user) {
             return res.status(400).json({
                 message: '에러 발생! ',
@@ -21,9 +22,8 @@ exports.create = function (req, res) {
                 res.send(err);
             }
             // jwt.sign('token내용', 'JWT secretkey')
-            const token = jwt.sign(user.toJSON(), accessTokenSecret, { expiresIn: "30s" });
-            const refreshToken = jwt.sign(user.toJSON(), refreshTokenSecret, { expiresIn: "3m" })
-            // cookie.set('jwt', refreshToken)
+            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: "30s" });
+            const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, { expiresIn: "30m" })
             refreshTokens.push(refreshToken)
             res.cookie("token", token);
             return res.json({ user, token, refreshToken });
@@ -35,7 +35,6 @@ exports.create = function (req, res) {
 
 exports.makeToken = async function (req, res) {
     const refreshToken = req.header("x-auth-token");
-    console.log("resfreshToken!!!!", refreshToken)
 
     if (!refreshToken) {
         res.status(401).json({
@@ -53,11 +52,11 @@ exports.makeToken = async function (req, res) {
     }
 
     try {
-        const user = await jwt.verify(refreshToken, refreshTokenSecret);
+        const user = await jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
 
         const { userId } = user
         const accessToken = await jwt.sign(
-            { userId }, accessTokenSecret, { expiresIn: "30s" }
+            { userId }, process.env.ACCESS_TOKEN, { expiresIn: "30s" }
         )
         res.json({ accessToken })
     } catch (error) {

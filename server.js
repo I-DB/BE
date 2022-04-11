@@ -1,18 +1,12 @@
 const app = require('./app')
 const fs = require('fs')
+const http = require('http')
 const https = require('https')
+require('dotenv').config()
 const domain = process.env.DOMAIN
-const dev = true
+let httpsServer
 
-if (dev === true) {
-	const port = 3000
-
-	const handleListening = () =>
-		console.log(`Listening on : http://localhost:${port}`)
-
-	app.listen(port, handleListening())
-} else {
-	const port = 443
+if (process.env.DEV) {
 	const privateKey = fs.readFileSync(
 		`/etc/letsencrypt/live/${domain}/privkey.pem`,
 		'utf8'
@@ -31,9 +25,18 @@ if (dev === true) {
 		cert: certificate,
 		ca: ca,
 	}
-
-	const httpsServer = https.createServer(credentials, app)
-	httpsServer.listen(port, () => {
-		console.log('HTTPS Server running on port 443')
-	})
+	httpsServer = https.createServer(credentials, app)
+} else {
+	httpsServer = https.createServer(app)
 }
+
+const httpServer = http.createServer(app)
+
+httpServer.listen(3000, () => {
+	console.log(`Listening on : http://localhost:3000`)
+	console.log('HTTPS Server running on port 3000')
+})
+
+httpsServer.listen(443, () => {
+	console.log('HTTPS Server running on port 443')
+})
