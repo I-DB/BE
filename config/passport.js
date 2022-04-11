@@ -3,6 +3,7 @@ const passport = require('passport')
 const passportJWT = require('passport-jwt')
 const JWTStrategy = passportJWT.Strategy
 const ExtractJWT = passportJWT.ExtractJwt
+const CookieStrategy = require('passport-cookie').Strategy
 const bcrypt = require('bcrypt')
 const LocalStrategy = require('passport-local').Strategy
 const User = require('../models/user')
@@ -20,21 +21,27 @@ module.exports = () => {
 			{
 				usernameField: 'userId',
 				passwordField: 'password',
+
 			},
-			function (userId, password, done) {
+			async (userId, password, done) => {
 				// 이 부분에선 저장되어 있는 User를 비교하면 된다.
 				// userId가 잘못된 경우 예외처리 필요
-				return User.findOne({ userId })
-					.then((user) => {
-						const decodedPassword = user.password
-						if (!bcrypt.compareSync(password, decodedPassword)) {
-							return done(null, false, {
-								message: '아이디나 비밀번호가 잘못됐습니다.',
-							})
-						}
-						return done(null, user, { message: '로그인 성공!' })
-					})
-					.catch((err) => done(err))
+				try {
+					const user = await User.findOne({ userId });
+					if (!user) {
+						return done(null, false, { error: "존재하지 않은 사용자입니다" })
+					}
+					const result = await bcrypt.compare(password, user.password)
+					if (result) {
+						return done(null, user)
+					} else {
+						return done(null, false, { error: "비밀번호가 틀립니다." })
+					}
+
+				} catch (err) {
+					// console.log(err)
+					return done(err);
+				}
 			}
 		)
 	)
@@ -42,13 +49,22 @@ module.exports = () => {
 	//local 인증을 통해 JWT TOKEN 발급해주는 API작성 필요!
 	//JWT Strategy
 	//JWT 토큰이 있는지, 유효한 토큰인지 확인
+
+	var cookieExtractor = function (req) {
+		var token = null;
+		if (req && req.cookies) {
+			token = req.cookies['token'];
+		}
+		return token;
+	};
+	// ExtractJWT.fromAuthHeaderAsBearerToken()
 	passport.use(new JWTStrategy({
-		jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+		jwtFromRequest: cookieExtractor,
 		secretOrKey: process.env.ACCESS_TOKEN
 	},
-		function (jwtPayload, done) {
+		async function (jwtPayload, done) {
 			const { userId } = jwtPayload
-			return User.findOne({ userId })
+			return await User.findOne({ userId })
 				.select('-password') //password 빼주기
 				.then((user) => {
 					return done(null, user)
@@ -59,5 +75,23 @@ module.exports = () => {
 		}
 	)
 	)
+
+	// passport.use(new CookieStrategy({
+	// 	cookieName: 'auth',
+	// 	signed: true,
+	// 	passReqToCallback: true
+	// }, function (req, token, done) {
+
+	// 	console.log("@@@", token)
+
+	// 	User.findByToken({ token: token }, function (err, user) {
+
+	// 		if (err) { return done(err); }
+	// 		if (!user) { return done(null, false); }
+	// 		return done(null, user);
+	// 	});
+	// })
+	// )
+
 
 }

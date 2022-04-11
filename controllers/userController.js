@@ -32,7 +32,7 @@ async function postJoin(req, res) {
 
 async function sendAuth(req, res) {
     // #swagger.tags = ['user']
-    console.log("@@@@", req.user)
+    console.log("@@22", req.cookies)
     res.send({ user: req.user, success: true })
 }
 

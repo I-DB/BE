@@ -1,12 +1,14 @@
+const { string } = require('joi')
 const mongoose = require('mongoose')
 
 const refreshTokenSchema = new mongoose.Schema({
     token: String,
+    userId: String,
     user: {
         type: mongoose.Schema.Types.ObjectId,
-
         ref: 'User',
-    }
+    },
+
 })
 
 
