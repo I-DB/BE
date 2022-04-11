@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser')
 const swaggerUi = require('swagger-ui-express')
 const swaggerFile = require('./swagger-output')
 const expressBasicAuth = require('express-basic-auth')
+const morgan = require('morgan')
 
 require('dotenv').config()
 
@@ -30,13 +31,11 @@ app.use(
 		},
 	})
 )
-
-
+app.use(morgan('dev'))
 //passport 사용한다고 express에게 말함
 app.use(passport.initialize())
 passportConfig()
 app.use(cookieParser())
-
 
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 app.use('/', routes)
