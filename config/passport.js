@@ -21,7 +21,6 @@ module.exports = () => {
 			{
 				usernameField: 'userId',
 				passwordField: 'password',
-
 			},
 			async (userId, password, done) => {
 				// 이 부분에선 저장되어 있는 User를 비교하면 된다.
@@ -75,7 +74,5 @@ module.exports = () => {
 		}
 	)
 	)
-
-
 
 }

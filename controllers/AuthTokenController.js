@@ -46,9 +46,11 @@ exports.create = function (req, res) {
             // refreshTokens.push(refreshToken)
             res.cookie("token", token, {
                 httpOnly: true,
-                domain: '.ideadb.shop'
+                sameSite: 'none',
+                secure: true,
             });
-            console.log("%%%%%%%%%%", token)
+
+
             return res.json({ succcss: true, token, refreshToken });
         });
     })(req, res);
@@ -58,7 +60,7 @@ exports.create = function (req, res) {
 
 exports.makeToken = async function (req, res) {
     const userId = req.body.userId;
-    const refreshTokenfrom_header = req.header("cookie");
+    const refreshTokenfrom_header = req.header("x-auth-token");
 
     console.log("@@@@@@", refreshTokenfrom_header)
     const refreshToken = await RefreshTokenSchema.findOne({ userId }).then((token) => token.token)
