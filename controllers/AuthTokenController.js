@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
+const RefreshTokenSchema = require("../models/refreshToken")
 require('dotenv').config()
 
 
@@ -22,11 +23,23 @@ exports.create = function (req, res) {
                 res.send(err);
             }
             // jwt.sign('token내용', 'JWT secretkey')
-            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: "30s" });
+            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: "1m" });
             const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, { expiresIn: "30m" })
-            refreshTokens.push(refreshToken)
+            const find_token_in_schema = await RefreshTokenSchema.findOne({ user: user.userId })
+            if (!find_token_in_schema) {
+                const refreshTokenSchema = new RefreshTokenSchema({
+                    token: refreshToken,
+                    user: user._id,
+                })
+                await refreshTokenSchema.save();
+            } else {
+                let new_token = await RefreshTokenSchema.findOneAndUpdate({ user: user.userId },
+                    { token: refreshToken },
+                    { new: true })
+            }
+            // refreshTokens.push(refreshToken)
             res.cookie("token", token);
-            return res.json({ user, token, refreshToken });
+            return res.json({ user, token });
         });
     })(req, res);
 };
