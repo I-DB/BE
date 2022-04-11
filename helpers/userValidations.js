@@ -3,7 +3,7 @@ const Joi = require("joi")
 
 
 const UserSchema = Joi.object().keys({
-    userId: Joi.string().required().min(3).max(10).error(errors => {
+    userId: Joi.string().required().alphanum().min(3).max(10).error(errors => {
         errors.forEach(err => {
             switch (err.code) {
                 case "any.required":
@@ -14,25 +14,25 @@ const UserSchema = Joi.object().keys({
                 case "string.max":
                     err.message = "아이디는 최대 10글자까지 가능합니다!"
                     break;
+                case "string.alphanum":
+                    err.message = "아이디는 영어와 숫자로 작성해주세요"
+                    break;
                 default:
                     break;
             }
         })
         return errors
     }),
-    nickName: Joi.string().required().min(3).max(20).alphanum().error(errors => {
+    nickName: Joi.string().required().min(3).max(20).error(errors => {
         errors.forEach(err => {
             switch (err.code) {
                 case "any.required":
-                    return err.message = "닉네입을 입력해주세요!"
+                    return err.message = "닉네임을 입력해주세요!"
                 case "string.min":
                     err.message = "닉네임은 최소 3글자 이상으로 입력해주세요!"
                     break;
                 case "string.max":
                     err.message = "닉네임은 최대 20글자까지 가능합니다!"
-                    break;
-                case "string.alphanum":
-                    err.message = "닉네임은 영어로 작성해주세요"
                     break;
                 default:
                     break;

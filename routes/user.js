@@ -1,23 +1,30 @@
 const express = require('express')
-
 const userController = require('../controllers/userController')
-
 const AuthTokenController = require('../controllers/AuthTokenController')
 const passport = require('passport')
 const router = express.Router()
 
-router.post('/join', userController.postJoin)
+router.post("/join", userController.postJoin)
 
 router.get(
-	'/auth',
-	passport.authenticate('jwt', { session: false }),
-	userController.sendAuth
+    '/auth',
+    passport.authenticate('jwt', { session: false }),
+    userController.sendAuth
 )
 
 router.post(
-	'/login',
-	passport.authenticate('local', { session: false }),
-	AuthTokenController.create
+    '/login',
+    passport.authenticate('local', { session: false }),
+    AuthTokenController.create
 )
+
+
+router.post("/token", AuthTokenController.makeToken)
+
+
+
+
+
+
 
 module.exports = router
