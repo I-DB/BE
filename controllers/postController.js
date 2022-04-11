@@ -84,7 +84,20 @@ async function updateComment(req, res) {
 	const { postId } = req.params
 	const { commentId, content } = req.body
 
-	// await Post.updateOne({ _id : postId, comment: { _id: commentId} }, { $set: { comment: { content } } });
+	await Post.updateOne(
+		{
+			_id: postId,
+			comment: {
+				$elemMatch: {
+					_id: commentId,
+				},
+			},
+		},
+		{
+			$set: { 'comment.$.content': content },
+		}
+	)
+
 	res.json({ success: true }) ////미구현
 }
 
