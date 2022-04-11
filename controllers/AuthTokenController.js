@@ -62,7 +62,6 @@ exports.makeToken = async function (req, res) {
     const userId = req.body.userId;
     const refreshTokenfrom_header = req.header("x-auth-token");
 
-    console.log("@@@@@@", refreshTokenfrom_header)
     const refreshToken = await RefreshTokenSchema.findOne({ userId }).then((token) => token.token)
     if (!refreshTokenfrom_header) {
         res.status(401).json({
@@ -102,8 +101,7 @@ exports.checkAuthenticated = function (req, res, next) {
 
     const refreshToken = req.header("x-auth-token");
     const result = "";
-    console.log("2222", token)
-    console.log("#33333", refreshToken)
+
     try {
         jwt.decode(token);
         const { exp } = jwt.decode(refreshToken)
@@ -119,5 +117,4 @@ exports.checkAuthenticated = function (req, res, next) {
     } else {
         return false
     }
-
 }
