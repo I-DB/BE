@@ -28,7 +28,7 @@ exports.create = function (req, res) {
                 res.send(err);
             }
             // jwt.sign('token내용', 'JWT secretkey')
-            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: "1m" });
+            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: "10m" });
             const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, { expiresIn: "50m" })
             const find_token_in_schema = await RefreshTokenSchema.findOne({ user: user._id })
             if (!find_token_in_schema) {
@@ -44,7 +44,11 @@ exports.create = function (req, res) {
                     { new: true })
             }
             // refreshTokens.push(refreshToken)
-            res.cookie("token", token, "refreshToken", refreshToken);
+            res.cookie("token", token, {
+                httpOnly: true,
+                domain: '.ideadb.shop'
+            });
+            console.log("%%%%%%%%%%", token)
             return res.json({ succcss: true, token, refreshToken });
         });
     })(req, res);
@@ -54,7 +58,9 @@ exports.create = function (req, res) {
 
 exports.makeToken = async function (req, res) {
     const userId = req.body.userId;
-    const refreshTokenfrom_header = req.header("x-auth-token");
+    const refreshTokenfrom_header = req.header("cookie");
+
+    console.log("@@@@@@", refreshTokenfrom_header)
     const refreshToken = await RefreshTokenSchema.findOne({ userId }).then((token) => token.token)
     if (!refreshTokenfrom_header) {
         res.status(401).json({
@@ -70,7 +76,7 @@ exports.makeToken = async function (req, res) {
 
             const { userId } = user
             const accessToken = jwt.sign(
-                { userId }, process.env.ACCESS_TOKEN, { expiresIn: "1m" }
+                { userId }, process.env.ACCESS_TOKEN, { expiresIn: "30m" }
             )
             res.json({ accessToken })
         } catch (error) {
