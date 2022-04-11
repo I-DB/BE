@@ -6,6 +6,9 @@ const postCtrl = require("../controllers/postController");
 // 메인페이지 불러오기
 router.get("/", postCtrl.showPost);
 
+// 검색
+router.get("/search", postCtrl.searchPost);
+
 // 게시글 작성
 router.post("/", passport.authenticate('jwt', { session: false }), postCtrl.applyPost);
 

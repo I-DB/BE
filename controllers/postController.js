@@ -113,6 +113,13 @@ async function deleteComment(req, res) {
 	res.json({ success: true })
 }
 
+async function searchPost(req, res) {
+	const { keyword } = req.body
+	const result = await Post.find({ $or: [ { title: { $regex: keyword } }, { content: { $regex: keyword } } ] })
+
+	res.send({ success: true, result })
+}
+
 module.exports = {
 	applyPost,
 	showPost,
@@ -124,4 +131,5 @@ module.exports = {
 	applyComment,
 	updateComment,
 	deleteComment,
+	searchPost
 }
