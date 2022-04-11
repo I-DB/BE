@@ -114,6 +114,7 @@ async function deleteComment(req, res) {
 }
 
 async function searchPost(req, res) {
+	// #swagger.tags = ['post']
 	const { keyword } = req.body
 	const result = await Post.find({ $or: [ { title: { $regex: keyword } }, { content: { $regex: keyword } } ] })
 
