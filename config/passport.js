@@ -76,22 +76,6 @@ module.exports = () => {
 	)
 	)
 
-	// passport.use(new CookieStrategy({
-	// 	cookieName: 'auth',
-	// 	signed: true,
-	// 	passReqToCallback: true
-	// }, function (req, token, done) {
-
-	// 	console.log("@@@", token)
-
-	// 	User.findByToken({ token: token }, function (err, user) {
-
-	// 		if (err) { return done(err); }
-	// 		if (!user) { return done(null, false); }
-	// 		return done(null, user);
-	// 	});
-	// })
-	// )
 
 
 }
