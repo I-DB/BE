@@ -40,8 +40,8 @@ exports.create = function (req, res) {
             }
             // refreshTokens.push(refreshToken)
             res.cookie("token", token);
-            const { userId, nickName } = user
-            return res.json({ succcss: true, userId, nickName, token, refreshToken });
+
+            return res.json({ succcss: true, token, refreshToken });
         });
     })(req, res);
 };
