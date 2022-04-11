@@ -18,7 +18,12 @@ const app = express()
 connect()
 
 //미들웨어
-app.use(cors())
+app.use(
+	cors({
+		origin: '*',
+		credentials: true,
+	})
+)
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(express.static('public'))
