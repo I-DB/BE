@@ -23,7 +23,7 @@ exports.create = function (req, res) {
                 res.send(err);
             }
             // jwt.sign('token내용', 'JWT secretkey')
-            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: "1m" });
+            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: "10m" });
             const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, { expiresIn: "30m" })
             const find_token_in_schema = await RefreshTokenSchema.findOne({ user: user._id })
             if (!find_token_in_schema) {
@@ -40,7 +40,8 @@ exports.create = function (req, res) {
             }
             // refreshTokens.push(refreshToken)
             res.cookie("token", token);
-            return res.json({ succcss: true, token, refreshToken });
+            const { userId, nickName } = user
+            return res.json({ succcss: true, userId, nickName, token, refreshToken });
         });
     })(req, res);
 };
