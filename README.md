@@ -36,3 +36,6 @@ I:DB는 이러한 사소한 아이디어를 모아서 조금씩 덧붙이고 구
 
 오지우
 ========
+
+
+![Footer](https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=footer)

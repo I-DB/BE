@@ -31,10 +31,13 @@ app.use(
 	})
 )
 
+
 //passport 사용한다고 express에게 말함
 app.use(passport.initialize())
 passportConfig()
 app.use(cookieParser())
+
+
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 app.use('/', routes)
 app.use((req, res, next) => {
