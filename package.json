@@ -15,6 +15,7 @@
     "jwt-check-expiration": "^1.0.5",
     "jwt-check-expiry": "^1.0.10",
     "mongoose": "^6.2.10",
+    "morgan": "^1.10.0",
     "passport": "^0.5.2",
     "passport-cookie": "^1.0.9",
     "passport-jwt": "^4.0.0",

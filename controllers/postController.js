@@ -98,7 +98,7 @@ async function updateComment(req, res) {
 		}
 	)
 
-	res.json({ success: true }) ////미구현
+	res.json({ success: true })
 }
 
 async function deleteComment(req, res) {
@@ -113,6 +113,14 @@ async function deleteComment(req, res) {
 	res.json({ success: true })
 }
 
+async function searchPost(req, res) {
+	// #swagger.tags = ['post']
+	const { keyword } = req.body
+	const result = await Post.find({ $or: [ { title: { $regex: keyword } }, { content: { $regex: keyword } } ] })
+
+	res.send({ success: true, result })
+}
+
 module.exports = {
 	applyPost,
 	showPost,
@@ -124,4 +132,5 @@ module.exports = {
 	applyComment,
 	updateComment,
 	deleteComment,
+	searchPost
 }
