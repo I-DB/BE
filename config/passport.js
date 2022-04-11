@@ -3,7 +3,7 @@ const passport = require('passport')
 const passportJWT = require('passport-jwt')
 const JWTStrategy = passportJWT.Strategy
 const ExtractJWT = passportJWT.ExtractJwt
-const CookieStrategy = require('passport-cookie').Strategy
+
 const bcrypt = require('bcrypt')
 const LocalStrategy = require('passport-local').Strategy
 const User = require('../models/user')
@@ -49,16 +49,16 @@ module.exports = () => {
 	//JWT Strategy
 	//JWT 토큰이 있는지, 유효한 토큰인지 확인
 
-	var cookieExtractor = function (req) {
-		var token = null;
-		if (req && req.cookies) {
-			token = req.cookies['token'];
-		}
-		return token;
-	};
-	// ExtractJWT.fromAuthHeaderAsBearerToken()
+	// var cookieExtractor = function (req) {
+	// 	var token = null;
+	// 	if (req && req.cookies) {
+	// 		token = req.cookies['token'];
+	// 	}
+	// 	return token;
+	// };
+	// 
 	passport.use(new JWTStrategy({
-		jwtFromRequest: cookieExtractor,
+		jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
 		secretOrKey: process.env.ACCESS_TOKEN
 	},
 		async function (jwtPayload, done) {
