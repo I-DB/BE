@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const RefreshTokenSchema = require("../models/refreshToken")
-
 require('dotenv').config()
 
 
@@ -13,23 +12,23 @@ exports.create = function (req, res) {
     // #swagger.tags = ['user']
     passport.authenticate('local', { session: false }, (err, user, info) => {
 
+
         if (err || !user) {
-            return res.status(400).json({
-                reason: '에러 발생! ',
+            return res.status(401).json({
+                message: info.message,
                 user: user
             });
         }
 
-        if (info) {
-            return res.status(401).json({ message: info.reason })
-        }
+
         req.login(user, { session: false }, async (err) => {
+
             if (err) {
                 res.send(err);
             }
             // jwt.sign('token내용', 'JWT secretkey')
-            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: "10m" });
-            const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, { expiresIn: "50m" })
+            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: "1m" });
+            const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, { expiresIn: "5m" })
             const find_token_in_schema = await RefreshTokenSchema.findOne({ user: user._id })
             if (!find_token_in_schema) {
                 const refreshTokenSchema = new RefreshTokenSchema({
@@ -44,14 +43,12 @@ exports.create = function (req, res) {
                     { new: true })
             }
 
-            res.cookie("token", token, {
-                httpOnly: true,
-                sameSite: 'none',
-                secure: true,
-            });
-
-
-            return res.json({ succcss: true, token, refreshToken });
+            res.cookie("token", token)
+            res.cookie("refreshToken", refreshToken)
+            req.cookies.token = token;
+            req.cookies.refreshToken = refreshToken
+            const { userId, nickName } = user;
+            return res.json({ succcss: true, token, refreshToken, userId, nickName });
         });
     })(req, res);
 };
