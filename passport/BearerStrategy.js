@@ -49,16 +49,16 @@ module.exports = () => {
 	//JWT Strategy
 	//JWT 토큰이 있는지, 유효한 토큰인지 확인
 
-	var cookieExtractor = function (req) {
-		var token = null;
-		if (req && req.cookies) {
-			token = req.cookies['token'];
-		}
-		return token;
-	};
+	// var cookieExtractor = function (req) {
+	// 	var token = null;
+	// 	if (req && req.cookies) {
+	// 		token = req.cookies['token'];
+	// 	}
+	// 	return token;
+	// };
 	// fromAuthHeaderAsBearerToken()
 	passport.use(new JWTStrategy({
-		jwtFromRequest: cookieExtractor,
+		jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
 		secretOrKey: process.env.ACCESS_TOKEN
 	},
 		async function (jwtPayload, done) {
