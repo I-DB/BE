@@ -24,10 +24,10 @@ exports.create = function (req, res) {
 			}
 			// jwt.sign('token내용', 'JWT secretkey')
 			const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, {
-				expiresIn: "10m"
+				expiresIn: process.env.VALID_ACCESS_TOKEN_TIME
 			})
 			const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, {
-				expiresIn: "10m",
+				expiresIn: process.env.VALID_REFRESH_TOKEN_TIME
 			})
 			const find_token_in_schema = await RefreshTokenSchema.findOne({ user: user._id })
 			if (!find_token_in_schema) {

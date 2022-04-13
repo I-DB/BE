@@ -16,7 +16,7 @@ module.exports = {
         if (req.cookies.token === undefined) {
             return res.status(403).json({ message: "토큰이 만료되어 다시 로그인해주세요!" })
         }
-        console.log("!!!!!!!!!!", req.cookies)
+        // console.log("!!!!!!!!!!", req.cookies)
         const accessToken = verifyToken(req.cookies.token)
         const refreshToken = verifyRefreshToken(req.cookies.refreshToken)
 
@@ -36,8 +36,7 @@ module.exports = {
                 // const userInfo = verifyToken(newAccessToken)
                 // res.status(200).json({ userInfo, newAccessToken })
                 res.cookie('token', newAccessToken)
-                console.log("access만료되서 새로운 거 발급")
-                console.log("newAccessTOKEN", newAccessToken)
+
                 next()
             }
         } else {
@@ -51,7 +50,6 @@ module.exports = {
                     { new: true })
 
                 res.cookie('refreshToken', newRefreshToken)
-                console.log("access는 있는데 refresh만료되서 새로 refresh발급")
                 next()
             } else {
                 //case 4 둘 다 유효한 경우
