@@ -44,8 +44,6 @@ exports.create = function (req, res) {
 					{ new: true }
 				)
 			}
-			await res.clearCookie('token')
-			await res.clearCookie('refreshToken')
 			res.cookie('token', token, { sameSite: 'None', secure: true })
 			res.cookie('refreshToken', refreshToken, { sameSite: 'none', secure: true })
 			//req.cookies.token = token
