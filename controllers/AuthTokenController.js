@@ -42,7 +42,6 @@ exports.create = function (req, res) {
             }
 
 
-
             res.cookie("token", token)
             res.cookie("refreshToken", refreshToken)
             req.cookies.token = token;
