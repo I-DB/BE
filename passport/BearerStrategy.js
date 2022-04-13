@@ -28,7 +28,6 @@ module.exports = () => {
 				try {
 					const user = await User.findOne({ userId });
 					if (!user) {
-						console.log("Hello world")
 						done(null, false, { message: "유효하지 않은 사용자입니다." })
 					} else {
 
@@ -42,7 +41,6 @@ module.exports = () => {
 
 
 				} catch (err) {
-					console.log("@@@", err)
 					done(err);
 				}
 			}
@@ -72,7 +70,6 @@ module.exports = () => {
 					return done(null, user)
 				})
 				.catch((err) => {
-					console.log("#####", "401")
 					return done(err)
 				})
 		}

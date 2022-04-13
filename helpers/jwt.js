@@ -3,11 +3,9 @@ const jwt = require('jsonwebtoken');
 
 function verifyToken(token) {
     try {
-        console.log("토큰 검사하러 왔어요")
         const result = jwt.verify(token, process.env.ACCESS_TOKEN);
         return result
     } catch (e) {
-        console.log("$$$", "만료되면 열로 가냐?")
         return null
     }
 }
@@ -16,12 +14,10 @@ function verifyToken(token) {
 
 function verifyRefreshToken(refreshToken) {
     try {
-        console.log("리프레쉬토큰 검사하러 왔어요")
         const resultr = jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
         return resultr
     } catch (e) {
         if (e.name === 'TokenExpiredError') {
-            console.log("####", "만료되면 일루 옴")
             return null
         }
     }
