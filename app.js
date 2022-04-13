@@ -8,13 +8,12 @@ const swaggerFile = require('./swagger-output')
 const expressBasicAuth = require('express-basic-auth')
 const morgan = require('morgan')
 
-
 require('dotenv').config()
 
 //1. passport 등록 => 전략 정의
 const passport = require('passport')
 const passportConfig = require('./passport/BearerStrategy')
-const flash = require("connect-flash")
+const flash = require('connect-flash')
 const app = express()
 
 connect()
@@ -29,7 +28,11 @@ app.use(
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(express.static('public'))
-
+app.use((req, res, next) => {
+	//x-Powerd-By 제거
+	res.removeHeader('X-Powered-By')
+	next()
+})
 
 app.use(
 	['/swagger'],
