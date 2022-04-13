@@ -6,7 +6,9 @@ function verifyToken(token) {
         const result = jwt.verify(token, process.env.ACCESS_TOKEN);
         return result
     } catch (e) {
-        return token
+        if (e.name === 'TokenExpiredError') {
+            return null
+        }
     }
 }
 

@@ -26,10 +26,7 @@ module.exports = {
                 return res.status(403).json({ message: "토큰이 만료되어 다시 로그인해주세요!" })
             } else {
                 //case 2 access token만료, refresh token 유효
-                // const { userId } = req.body;
                 const refreshTokeninDB = await RefreshTokenSchema.findOne({}).then((token) => token.token)
-
-                // const { userId } = user
                 const user = jwt.verify(refreshTokeninDB, process.env.REFRESH_TOKEN);
                 const newAccessToken = jwt.sign({ userId: user.userId, nickName: user.nickName }, process.env.ACCESS_TOKEN, { expiresIn: process.env.VALID_ACCESS_TOKEN_TIME })
                 const userInfo = verifyToken(newAccessToken)
