@@ -9,12 +9,13 @@ module.exports = {
 
         const { authorization } = req.headers
         const [tokenType, tokenValue] = authorization.split(' ');
+
         if (tokenValue === undefined) {
             return res.status(403).json({ message: "토큰이 만료되어 다시 로그인해주세요!" })
         }
 
         const accessToken = verifyToken(tokenValue)
-        const { userId } = req.body
+        const { userId } = accessToken
         const find_token_in_schema = await RefreshTokenSchema.findOne({ userId }).then((token) => token.token)
         const refreshToken = verifyRefreshToken(find_token_in_schema)
 
@@ -25,8 +26,9 @@ module.exports = {
                 return res.status(403).json({ message: "토큰이 만료되어 다시 로그인해주세요!" })
             } else {
                 //case 2 access token만료, refresh token 유효
-                const { userId } = req.body;
-                const refreshTokeninDB = await RefreshTokenSchema.findOne({ userId }).then((token) => token.token)
+                // const { userId } = req.body;
+                const refreshTokeninDB = await RefreshTokenSchema.findOne({}).then((token) => token.token)
+
                 // const { userId } = user
                 const user = jwt.verify(refreshTokeninDB, process.env.REFRESH_TOKEN);
                 const newAccessToken = jwt.sign({ userId: user.userId, nickName: user.nickName }, process.env.ACCESS_TOKEN, { expiresIn: process.env.VALID_ACCESS_TOKEN_TIME })

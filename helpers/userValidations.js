@@ -1,8 +1,9 @@
 const Joi = require('joi')
 
 const UserSchema = Joi.object().keys({
-	userId: Joi.string().regex(new RegExp(/[a-zA-Z0-9]/))
+	userId: Joi.string().regex(new RegExp(/^[a-zA-Z0-9]+$/))
 		.required()
+		.empty()
 		.alphanum()
 		.min(3)
 		.max(10)
@@ -11,6 +12,9 @@ const UserSchema = Joi.object().keys({
 				switch (err.code) {
 					case 'any.required':
 						err.message = '아이디를 입력해주세요'
+						break
+					case 'string.empty':
+						err.message = '아이디는 꼭 입력하셔야 해요!'
 						break
 					case 'string.min':
 						err.message = '아이디는 최소 3글자 이상으로 입력해주세요!'
@@ -22,7 +26,7 @@ const UserSchema = Joi.object().keys({
 						err.message = '아이디는 영어와 숫자로 작성해주세요'
 						break
 					case "string.pattern.base":
-						err.message = " 아이디는 영어와 숫자를 섞어서 작성해주세요"
+						err.message = " 아이디는 영어와 숫자만 가능합니다."
 						break
 					default:
 						break
@@ -96,23 +100,7 @@ const UserSchema = Joi.object().keys({
 			return errors
 		}),
 
-	confirmPassword: Joi.string()
-		.required()
-		.valid(Joi.ref('password'))
-		.error((errors) => {
-			errors.forEach((err) => {
-				switch (err.code) {
-					case 'any.only':
-						return (err.message = '비밀번호가 일치하지 않습니다.')
-					case 'any.required':
-						err.message = '비밀번호 확인란을 입력해주세요!'
-						break
-					default:
-						break
-				}
-			})
-			return errors
-		}),
+
 })
 
 module.exports = UserSchema
