@@ -33,7 +33,6 @@ async function postJoin(req, res) {
 async function sendAuth(req, res, next) {
     // #swagger.tags = ['user']
     res.send({ user: req.user, success: true })
-    next()
 }
 
 module.exports = { postJoin, sendAuth }
