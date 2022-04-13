@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
-const RefreshTokenSchema = require("../models/refreshToken")
-require('dotenv').config()
+const RefreshTokenSchema = require('../models/refreshToken')
 
+require('dotenv').config()
 
 //refreshTokens가 생성되면 이 배열에 넣어준다.
 // let refreshTokens = [];
@@ -11,7 +11,6 @@ require('dotenv').config()
 exports.create = function (req, res) {
     // #swagger.tags = ['user']
     passport.authenticate('local', { session: false }, (err, user, info) => {
-        console.log("@@@@@@@@@@@")
         if (err || !user) {
             return res.status(401).json({
                 message: info.message,
@@ -26,8 +25,8 @@ exports.create = function (req, res) {
                 res.send(err);
             }
             // jwt.sign('token내용', 'JWT secretkey')
-            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: "10m" });
-            const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, { expiresIn: "30s" })
+            const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, { expiresIn: process.env.VALID_ACCESS_TOKEN_TIME });
+            const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, { expiresIn: process.env.VALID_REFRESH_TOKEN_TIME })
             const find_token_in_schema = await RefreshTokenSchema.findOne({ user: user._id })
             if (!find_token_in_schema) {
                 const refreshTokenSchema = new RefreshTokenSchema({
