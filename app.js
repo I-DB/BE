@@ -21,7 +21,7 @@ connect()
 //미들웨어
 app.use(
 	cors({
-		origin: '*',
+		origin: ['http://localhost:3000', 'https://ideadb.shop'],
 		credentials: true,
 	})
 )
