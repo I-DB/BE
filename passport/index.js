@@ -1,4 +1,4 @@
 const BearerStrategy = require("../passport/BearerStrategy")
 
 
-module.exports = BearerStrategy;
+module.exports = { BearerStrategy };

@@ -1,7 +1,7 @@
 const Joi = require('joi')
 
 const UserSchema = Joi.object().keys({
-	userId: Joi.string()
+	userId: Joi.string().regex(new RegExp(/[a-zA-Z0-9]/))
 		.required()
 		.alphanum()
 		.min(3)
@@ -10,7 +10,8 @@ const UserSchema = Joi.object().keys({
 			errors.forEach((err) => {
 				switch (err.code) {
 					case 'any.required':
-						return (err.message = '아이디를 입력해주세요')
+						err.message = '아이디를 입력해주세요'
+						break
 					case 'string.min':
 						err.message = '아이디는 최소 3글자 이상으로 입력해주세요!'
 						break
@@ -19,6 +20,9 @@ const UserSchema = Joi.object().keys({
 						break
 					case 'string.alphanum':
 						err.message = '아이디는 영어와 숫자로 작성해주세요'
+						break
+					case "string.pattern.base":
+						err.message = " 아이디는 영어와 숫자를 섞어서 작성해주세요"
 						break
 					default:
 						break
@@ -34,7 +38,8 @@ const UserSchema = Joi.object().keys({
 			errors.forEach((err) => {
 				switch (err.code) {
 					case 'any.required':
-						return (err.message = '닉네임을 입력해주세요!')
+						err.message = '닉네임을 입력해주세요!'
+						break
 					case 'string.min':
 						err.message = '닉네임은 최소 3글자 이상으로 입력해주세요!'
 						break
@@ -48,17 +53,24 @@ const UserSchema = Joi.object().keys({
 			return errors
 		}),
 	password: Joi.string()
-		.pattern(new RegExp('^[a-zA-Z0-9]{3,10}$'))
+		.min(8)
+		.alphanum()
+		.regex(new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/))
 		.required()
 		.error((errors) => {
 			errors.forEach((err) => {
 				switch (err.code) {
 					case 'any.required':
-						return (err.message = '비밀번호를 입력해주세요!')
-
-					case 'string.pattern.base':
-						err.message =
-							'비밀번호는 최소 3글자 최대 10글자 영문과 숫자를 섞어서 사용해주세요 '
+						err.message = '비밀번호를 입력해주세요!'
+						break
+					case 'string.min':
+						err.message = '비밀번호는 최소 8글자 이상으로 입력해주세요!'
+						break
+					case 'string.alphanum':
+						err.message = '비밀번호는 영어와 숫자로만 작성해주세요'
+						break
+					case "string.pattern.base":
+						err.message = " 비밀번호는 최소 하나의 영어 대문자와 소문자와 숫자로 이루어지게 작성해주세요"
 						break
 					default:
 						break

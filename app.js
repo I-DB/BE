@@ -8,11 +8,13 @@ const swaggerFile = require('./swagger-output')
 const expressBasicAuth = require('express-basic-auth')
 const morgan = require('morgan')
 
+
 require('dotenv').config()
 
 //1. passport 등록 => 전략 정의
 const passport = require('passport')
 const passportConfig = require('./passport/BearerStrategy')
+const flash = require("connect-flash")
 const app = express()
 
 connect()
@@ -27,6 +29,8 @@ app.use(
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(express.static('public'))
+
+
 app.use(
 	['/swagger'],
 	expressBasicAuth({
@@ -41,6 +45,7 @@ app.use(morgan('dev'))
 app.use(passport.initialize())
 passportConfig()
 app.use(cookieParser())
+app.use(flash())
 
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 app.use('/', routes)
