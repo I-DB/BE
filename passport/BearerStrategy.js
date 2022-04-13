@@ -21,7 +21,6 @@ module.exports = () => {
 			{
 				usernameField: 'userId',
 				passwordField: 'password',
-
 			},
 			async (userId, password, done) => {
 				// 이 부분에선 저장되어 있는 User를 비교하면 된다.
@@ -29,17 +28,21 @@ module.exports = () => {
 				try {
 					const user = await User.findOne({ userId });
 					if (!user) {
-						done(null, false, { message: "invalid user" })
-					}
-					const result = await bcrypt.compare(password, user.password)
-					if (result) {
-						done(null, user)
+						console.log("Hello world")
+						done(null, false, { message: "유효하지 않은 사용자입니다." })
 					} else {
-						done(null, false, { message: "비밀번호가 틀립니다." })
+
+						const result = await bcrypt.compare(password, user.password)
+						if (result) {
+							done(null, user)
+						} else {
+							done(null, false, { message: "비밀번호가 틀립니다." })
+						}
 					}
 
+
 				} catch (err) {
-					// console.log(err)
+					console.log("@@@", err)
 					done(err);
 				}
 			}

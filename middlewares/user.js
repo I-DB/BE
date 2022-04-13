@@ -31,21 +31,22 @@ module.exports = {
                 const user = jwt.verify(refreshTokeninDB, process.env.REFRESH_TOKEN);
                 const newAccessToken = jwt.sign({ userId },
                     process.env.ACCESS_TOKEN,
-                    { expiresIn: "20s" })
+                    { expiresIn: "1m" })
 
                 console.log("newtoken", newAccessToken)
-                const v = verifyToken(newAccessToken)
-                console.log("새로 발급받은 accesstoken", v)
+
                 console.log("access 만료되서 refresh로 새로 access 만들었어요")
-                res.cookie('token', newAccessToken)
-                req.cookies.token = newAccessToken
-                next()
+                // res.cookie('token', newAccessToken)
+                // req.cookies.token = newAccessToken
+
+
+                const userInfo = verifyToken(newAccessToken)
+                res.status(200).json({ userInfo, newAccessToken })
             }
         } else {
             //access token은 유효
             if (refreshToken === null) {
                 //case 3 access token은 유효한데 refresh token은 만료 
-
                 const newRefreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, { expiresIn: '24h' })
                 console.log("newRefresh", newRefreshToken)
                 const refreshTokenSchema = new RefreshTokenSchema({
@@ -57,9 +58,9 @@ module.exports = {
 
                 console.log("access는 있는데 refresh만료되서 만들었어요")
 
+                // res.cookie('refreshToken', newRefreshToken)
+                // req.cookies.refreshToken = newRefreshToken
 
-                res.cookie('refreshToken', newRefreshToken)
-                req.cookies.refreshToken = newRefreshToken
                 next()
             } else {
                 //case 4 둘 다 유효한 경우

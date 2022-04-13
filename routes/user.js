@@ -22,7 +22,7 @@ router.post(
 )
 
 
-router.post("/token", AuthTokenController.makeToken)
+// router.post("/token", AuthTokenController.makeToken)
 
 
 
