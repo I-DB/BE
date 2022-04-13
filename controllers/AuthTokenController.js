@@ -45,7 +45,7 @@ exports.create = function (req, res) {
 				)
 			}
 
-			res.cookie('token', token, { sameSite: 'none', secure: true })
+			res.cookie('token', token, { sameSite: 'None', secure: true })
 			res.cookie('refreshToken', refreshToken, { sameSite: 'none', secure: true })
 			req.cookies.token = token
 			req.cookies.refreshToken = refreshToken
