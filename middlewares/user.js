@@ -39,7 +39,7 @@ module.exports = {
                 res.cookie('token', newAccessToken, { sameSite: 'None', secure: true, httpOnly: true })
                 res.cookie('refreshToken', req.cookies.refreshToken, { sameSite: 'None', secure: true, httpOnly: true })
 
-                req.cookie
+                req.cookies.token = newAccessToken;
 
                 next()
             }
