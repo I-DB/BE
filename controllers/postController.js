@@ -76,7 +76,12 @@ async function applyComment(req, res) {
 		}
 	)
 
-	res.json({ success: true })
+	const currentPost = await Post.findOne({ _id: postId })
+	const currentComment = currentPost.comment
+
+	let result = currentComment[currentComment.length-1].id
+
+	res.json({ success: true, result })
 }
 
 async function updateComment(req, res) {
