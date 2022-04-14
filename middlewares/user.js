@@ -17,10 +17,8 @@ module.exports = {
             return res.status(403).json({ message: "토큰이 만료되어 다시 로그인해주세요!" })
             // redirect("/login")
         }
-        console.log("!!!!!!!!!!", req.cookies)
         const accessToken = verifyToken(req.cookies.token)
         const refreshToken = verifyRefreshToken(req.cookies.refreshToken)
-        console.log("리프레쉬 토큰", req.cookies.refreshToken)
 
         //access token이 만료
         if (accessToken === null) {
