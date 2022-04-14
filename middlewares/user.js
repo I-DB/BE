@@ -34,9 +34,9 @@ module.exports = {
                 const newAccessToken = jwt.sign({ userId: user.userId, nickName: user.nickName }, process.env.ACCESS_TOKEN, { expiresIn: process.env.VALID_ACCESS_TOKEN_TIME })
                 // const userInfo = verifyToken(newAccessToken)
                 // res.status(200).json({ userInfo, newAccessToken })
+                res.clearCookie('token', accessToken, { domain: process.env.DOMAIN, path: "/" })
                 res.cookie('token', newAccessToken, { sameSite: 'None', secure: true, httpOnly: true })
                 res.cookie('refreshToken', req.cookies.refreshToken, { sameSite: 'None', secure: true, httpOnly: true })
-
                 req.cookies.token = newAccessToken;
 
                 next()
