@@ -28,6 +28,7 @@ app.use(
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(express.static('public'))
+app.use(cookieParser())
 app.use((req, res, next) => {
 	//x-Powerd-By 제거
 	res.removeHeader('X-Powered-By')
@@ -47,9 +48,7 @@ app.use(morgan('dev'))
 //passport 사용한다고 express에게 말함
 app.use(passport.initialize())
 passportConfig()
-app.use(cookieParser())
 app.use(flash())
-
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 app.use('/', routes)
 app.use((req, res, next) => {

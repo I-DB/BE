@@ -2,10 +2,11 @@ require('dotenv').config()
 const passport = require('passport')
 const passportJWT = require('passport-jwt')
 const JWTStrategy = passportJWT.Strategy
-const ExtractJWT = passportJWT.ExtractJwt
+// const ExtractJWT = passportJWT.ExtractJwt
 const bcrypt = require('bcrypt')
 const LocalStrategy = require('passport-local').Strategy
 const User = require('../models/user')
+const refreshToken = require('../models/refreshToken')
 
 
 //Strategy 정의
@@ -21,6 +22,7 @@ module.exports = () => {
 			{
 				usernameField: 'userId',
 				passwordField: 'password',
+
 			},
 			async (userId, password, done) => {
 				// 이 부분에선 저장되어 있는 User를 비교하면 된다.
@@ -28,19 +30,18 @@ module.exports = () => {
 				try {
 					const user = await User.findOne({ userId });
 					if (!user) {
-						done(null, false, { message: "유효하지 않은 사용자입니다." })
+						console.log("로그인하러 온 유저", user)
+						done(null, false, { message: "invalid user" })
+					}
+					const result = await bcrypt.compare(password, user.password)
+					if (result) {
+						done(null, user)
 					} else {
-
-						const result = await bcrypt.compare(password, user.password)
-						if (result) {
-							done(null, user)
-						} else {
-							done(null, false, { message: "비밀번호가 틀립니다." })
-						}
+						done(null, false, { message: "비밀번호가 틀립니다." })
 					}
 
-
 				} catch (err) {
+					// console.log(err)
 					done(err);
 				}
 			}
@@ -50,16 +51,16 @@ module.exports = () => {
 	//JWT Strategy
 	//JWT 토큰이 있는지, 유효한 토큰인지 확인
 
-	// var cookieExtractor = function (req) {
-	// 	var token = null;
-	// 	if (req && req.cookies) {
-	// 		token = req.cookies['token'];
-	// 	}
-	// 	return token;
-	// };
+	let cookieExtractor = function (req) {
+		let token = null;
+		if (req && req.cookies) {
+			token = req.cookies['token'];
+		}
+		return token
+	};
 	// fromAuthHeaderAsBearerToken()
 	passport.use(new JWTStrategy({
-		jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+		jwtFromRequest: cookieExtractor,
 		secretOrKey: process.env.ACCESS_TOKEN
 	},
 		async function (jwtPayload, done) {
