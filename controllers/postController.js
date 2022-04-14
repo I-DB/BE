@@ -106,17 +106,16 @@ async function deleteComment(req, res) {
 	const { postId } = req.params
 	const { commentId } = req.body
 
-	await Post.updateOne(
-		{ _id: postId },
-		{ $pull: { comment: { _id: commentId } } }
-	)
+	await Post.updateOne({ _id: postId }, { $pull: { comment: { _id: commentId } } })
 	res.json({ success: true })
 }
 
 async function searchPost(req, res) {
 	// #swagger.tags = ['post']
 	const { keyword } = req.body
-	const result = await Post.find({ $or: [{ title: { $regex: keyword } }, { content: { $regex: keyword } }] })
+	const result = await Post.find({
+		$or: [{ title: { $regex: keyword } }, { content: { $regex: keyword } }],
+	})
 
 	res.send({ success: true, result })
 }
@@ -132,5 +131,5 @@ module.exports = {
 	applyComment,
 	updateComment,
 	deleteComment,
-	searchPost
+	searchPost,
 }
