@@ -19,7 +19,7 @@ async function postJoin(req, res) {
 			})
 			return
 		}
-		const hashedPw = await bcrypt.hashSync(password, process.env.SALT_NUM)
+		const hashedPw = bcrypt.hashSync(password, 10)
 
 		await User.create({
 			userId,
