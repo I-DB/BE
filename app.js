@@ -21,7 +21,11 @@ connect()
 //미들웨어
 app.use(
 	cors({
-		origin: ['http://localhost:3000', 'https://ideadb.shop'],
+		origin: [
+			'http://localhost:3000',
+			'https://ideadb.shop',
+			'http://idea.database.s3-website.ap-northeast-2.amazonaws.com',
+		],
 		credentials: true,
 	})
 )
