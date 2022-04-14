@@ -36,8 +36,10 @@ module.exports = {
                 const newAccessToken = jwt.sign({ userId: user.userId, nickName: user.nickName }, process.env.ACCESS_TOKEN, { expiresIn: process.env.VALID_ACCESS_TOKEN_TIME })
                 // const userInfo = verifyToken(newAccessToken)
                 // res.status(200).json({ userInfo, newAccessToken })
-                res.cookie('token', newAccessToken)
-                res.cookie('refreshToken', req.cookies.refreshToken)
+                res.cookie('token', newAccessToken, { sameSite: 'None', secure: true, httpOnly: true })
+                res.cookie('refreshToken', req.cookies.refreshToken, { sameSite: 'None', secure: true, httpOnly: true })
+
+                req.cookie
 
                 next()
             }
@@ -51,7 +53,7 @@ module.exports = {
                     { token: newRefreshToken },
                     { new: true })
                 // res.cookie("token", req.cookies.token)
-                res.cookie('refreshToken', newRefreshToken)
+                res.cookie('refreshToken', newRefreshToken, { sameSite: 'None', secure: true, httpOnly: true })
                 next()
             } else {
                 //case 4 둘 다 유효한 경우
