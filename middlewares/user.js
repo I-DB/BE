@@ -17,10 +17,8 @@ module.exports = {
             return res.status(403).json({ message: "토큰이 만료되어 다시 로그인해주세요!" })
             // redirect("/login")
         }
-        console.log("!!!!!!!!!!", req.cookies)
         const accessToken = verifyToken(req.cookies.token)
         const refreshToken = verifyRefreshToken(req.cookies.refreshToken)
-        console.log("리프레쉬 토큰", req.cookies.refreshToken)
 
         //access token이 만료
         if (accessToken === null) {
@@ -36,10 +34,10 @@ module.exports = {
                 const newAccessToken = jwt.sign({ userId: user.userId, nickName: user.nickName }, process.env.ACCESS_TOKEN, { expiresIn: process.env.VALID_ACCESS_TOKEN_TIME })
                 // const userInfo = verifyToken(newAccessToken)
                 // res.status(200).json({ userInfo, newAccessToken })
+                res.clearCookie('token', accessToken, { domain: process.env.DOMAIN, path: "/" })
                 res.cookie('token', newAccessToken, { sameSite: 'None', secure: true, httpOnly: true })
                 res.cookie('refreshToken', req.cookies.refreshToken, { sameSite: 'None', secure: true, httpOnly: true })
-
-                req.cookie
+                req.cookies.token = newAccessToken;
 
                 next()
             }
@@ -52,8 +50,9 @@ module.exports = {
                 await RefreshTokenSchema.findOneAndUpdate({ userId },
                     { token: newRefreshToken },
                     { new: true })
-                // res.cookie("token", req.cookies.token)
+                // res.cookie("token", req.cookies.token, { sameSite: 'None', secure: true, httpOnly: true })
                 res.cookie('refreshToken', newRefreshToken, { sameSite: 'None', secure: true, httpOnly: true })
+                req.cookies.refreshToken = newRefreshToken;
                 next()
             } else {
                 //case 4 둘 다 유효한 경우
