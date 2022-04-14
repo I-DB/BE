@@ -110,7 +110,7 @@ async function deleteComment(req, res) {
 	// #swagger.tags = ['comment']
 	const { postId } = req.params
 	const { commentId } = req.body
-	if (commentId === 'undefined') res.json({ success: false, message: '에러발생했으니 다시 주세요' })
+	if (!commentId) res.json({ success: false })
 
 	await Post.updateOne({ _id: postId }, { $pull: { comment: { _id: commentId } } })
 	res.json({ success: true })
