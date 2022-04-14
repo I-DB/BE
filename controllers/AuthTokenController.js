@@ -25,7 +25,7 @@ exports.create = function (req, res) {
 			}
 			// jwt.sign('token내용', 'JWT secretkey')
 			const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, {
-				expiresIn: process.env.VALID_ACCESS_TOKEN_TIME
+				expiresIn: "1m"
 			})
 			const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, {
 				expiresIn: process.env.VALID_REFRESH_TOKEN_TIME
