@@ -6,7 +6,7 @@ const UserSchema = Joi.object().keys({
 		.empty()
 		.alphanum()
 		.min(3)
-		.max(10)
+		.max(20)
 		.error((errors) => {
 			errors.forEach((err) => {
 				switch (err.code) {
@@ -20,7 +20,7 @@ const UserSchema = Joi.object().keys({
 						err.message = '아이디는 최소 3글자 이상으로 입력해주세요!'
 						break
 					case 'string.max':
-						err.message = '아이디는 최대 10글자까지 가능합니다!'
+						err.message = '아이디는 최대 20글자까지 가능합니다!'
 						break
 					case 'string.alphanum':
 						err.message = '아이디는 영어와 숫자로 작성해주세요'

@@ -52,8 +52,9 @@ module.exports = {
                 await RefreshTokenSchema.findOneAndUpdate({ userId },
                     { token: newRefreshToken },
                     { new: true })
-                // res.cookie("token", req.cookies.token)
+                // res.cookie("token", req.cookies.token, { sameSite: 'None', secure: true, httpOnly: true })
                 res.cookie('refreshToken', newRefreshToken, { sameSite: 'None', secure: true, httpOnly: true })
+                req.cookies.refreshToken = newRefreshToken;
                 next()
             } else {
                 //case 4 둘 다 유효한 경우
