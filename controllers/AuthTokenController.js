@@ -46,8 +46,8 @@ exports.create = function (req, res) {
 				)
 			}
 			// { sameSite: 'None', secure: true }
-			res.cookie('token', token, { sameSite: 'none', secure: true, httpOnly: true })
-			res.cookie('refreshToken', refreshToken, { sameSite: 'none', httpOnly: true })
+			res.cookie('token', token, { sameSite: 'None', secure: true, httpOnly: true })
+			res.cookie('refreshToken', refreshToken, { sameSite: 'None', secure: true, httpOnly: true })
 
 			return res.json({ succcss: true, token, refreshToken })
 		})
