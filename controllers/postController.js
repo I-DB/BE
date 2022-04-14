@@ -79,7 +79,7 @@ async function applyComment(req, res) {
 	const currentPost = await Post.findOne({ _id: postId })
 	const currentComment = currentPost.comment
 
-	let result = currentComment[currentComment.length-1].id
+	let result = currentComment[currentComment.length - 1].id
 
 	res.json({ success: true, result })
 }
@@ -110,6 +110,7 @@ async function deleteComment(req, res) {
 	// #swagger.tags = ['comment']
 	const { postId } = req.params
 	const { commentId } = req.body
+	console.log(commentId)
 
 	await Post.updateOne({ _id: postId }, { $pull: { comment: { _id: commentId } } })
 	res.json({ success: true })
