@@ -15,11 +15,12 @@ module.exports = {
 
         if (req.cookies.token === undefined) {
             return res.status(403).json({ message: "토큰이 만료되어 다시 로그인해주세요!" })
+            // redirect("/login")
         }
-        // console.log("!!!!!!!!!!", req.cookies)
+        console.log("!!!!!!!!!!", req.cookies)
         const accessToken = verifyToken(req.cookies.token)
         const refreshToken = verifyRefreshToken(req.cookies.refreshToken)
-
+        console.log("리프레쉬 토큰", req.cookies.refreshToken)
 
         //access token이 만료
         if (accessToken === null) {
@@ -36,6 +37,7 @@ module.exports = {
                 // const userInfo = verifyToken(newAccessToken)
                 // res.status(200).json({ userInfo, newAccessToken })
                 res.cookie('token', newAccessToken)
+                res.cookie('refreshToken', req.cookies.refreshToken)
 
                 next()
             }
@@ -48,7 +50,7 @@ module.exports = {
                 await RefreshTokenSchema.findOneAndUpdate({ userId },
                     { token: newRefreshToken },
                     { new: true })
-
+                // res.cookie("token", req.cookies.token)
                 res.cookie('refreshToken', newRefreshToken)
                 next()
             } else {

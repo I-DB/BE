@@ -17,17 +17,18 @@ exports.create = function (req, res) {
 				user: user,
 			})
 		}
-
+		// process.env.VALID_REFRESH_TOKEN_TIME
+		// process.env.VALID_REFRESH_TOKEN_TIME
 		req.login(user, { session: false }, async (err) => {
 			if (err) {
 				res.send(err)
 			}
 			// jwt.sign('token내용', 'JWT secretkey')
 			const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN, {
-				expiresIn: process.env.VALID_ACCESS_TOKEN_TIME
+				expiresIn: "1m"
 			})
 			const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN, {
-				expiresIn: process.env.VALID_REFRESH_TOKEN_TIME
+				expiresIn: "2m"
 			})
 			const find_token_in_schema = await RefreshTokenSchema.findOne({ user: user._id })
 			if (!find_token_in_schema) {
@@ -45,8 +46,8 @@ exports.create = function (req, res) {
 				)
 			}
 			// { sameSite: 'None', secure: true }
-			res.cookie('token', token, { sameSite: 'None', secure: true })
-			res.cookie('refreshToken', refreshToken, { sameSite: 'None', httpOnly: true })
+			res.cookie('token', token, { sameSite: 'none', secure: true, httpOnly: true })
+			res.cookie('refreshToken', refreshToken, { sameSite: 'none', httpOnly: true })
 
 			return res.json({ succcss: true, token, refreshToken })
 		})
